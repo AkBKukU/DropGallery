@@ -1,11 +1,21 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+<meta content="text/html; charset=utf-8" http-equiv="Content-Type" />
+<title>1 2 3 4 5</title>
+</head>
+
+<body>
+
 <?php 
-//error_reporting(E_ALL);
-//ini_set('display_errors', '1');
-require_once($_SERVER['DOCUMENT_ROOT'].'/content/classes/class.SiteMain.php');
-$SM = new SiteMain();
-echo $SM->hPrintMeta("Gallery",'gallery.php');
-echo $SM->hPrintHeader($buttons);
-$image_path="content/gallery-images/20140920-DSC_0044.jpg";
+error_reporting(E_ALL);
+ini_set('display_errors', '1');
+require_once('content/classes/class.DropGallery.php');
+$image_path="content/gallery-images/loaded.jpg";
+
+$image = new FileInfo($image_path);
+$DG = new DropGallery();
 
 $imageHandle=fopen($image_path, 'r');
 $firstk=fread($imageHandle, 4096);
@@ -14,43 +24,50 @@ $lastk=fread($imageHandle, 4096);
 fclose($imageHandle);
 $id=md5($firstk.$lastk);
 
-$imageData = exif_read_data($image_path);
+
+$imageHandle=fopen("content/gallery-images/noise-red.jpg", 'r');
+$firstk=fread($imageHandle, 4096);
+fseek($imageHandle, filesize($image_path) - 4096);
+$lastk=fread($imageHandle, 4096);
+fclose($imageHandle);
+$idred=md5($firstk.filesize("content/gallery-images/noise-red.jpg").$lastk);
+
+
+
+$imageHandle=fopen("content/gallery-images/noise-blue.jpg", 'r');
+$firstk=fread($imageHandle, 4096);
+fseek($imageHandle, filesize($image_path) - 4096);
+$lastk=fread($imageHandle, 4096);
+fclose($imageHandle);
+$idblue=md5($firstk.filesize("content/gallery-images/noise-blue.jpg").$lastk);
 
 echo '
-				<div class="one object" id="image">
-					<header><h3>Age of Linux.png</h3></header>
-					<img width="100%" height="100%" alt="" src="content/gallery-images/20140920-DSC_0044.jpg"></a>
-					<p></p>
-					<footer><p>20140920-DSC_0044.jpg - 1278x808 - 1.4MB PNG Views: 66</p></footer>
-				</div>
+<link rel=StyleSheet href="content/styles/DG.Flow.css" type="text/css">
+<script type="text/javascript" src="content/js/DG.Flow.js" ></script>
 ';
 
-$size = getimagesize ( $image_path, $info);
-if(is_array($info)) 
-{
-    $iptc = iptcparse($info["APP13"]);
-    foreach (array_keys($iptc) as $s) 
-    {
-        $c = count ($iptc[$s]);
-        for ($i=0; $i <$c; $i++)
-        {
-            if ($s == "2#025")
-            {
-                $keywords[] = $iptc[$s][$i];
-            }
-        } 
-    }
-} 
+echo $DG->viewFolderNoDB();
+
 echo 
-'<div class="object"> 
+'
+
+<h1> Red: '.$idred.', Blue: '.$idblue.'</h1>
+
+<div class="object" onload="hidedgBigView()" > 
 	<header>
 		<h3>Picture Info</h3>
 	</header>
 	<table>
 		<tr>
 		<th> Name </th>
-		<td> '.$imageData["FileName"].' </td>
+		<td> '.$image->getTitle().' </td>
 		</tr>
+
+		<tr>
+		<th> Description </th>
+		<td> '.$image->getDescription().' </td>
+		</tr>
+
 
         <tr>
         <th> Id </th>
@@ -59,23 +76,24 @@ echo
 
 		<tr>
 		<th> Size </th>
-		<td> '.Utilities::filesizeInterpreter($imageData["FileSize"]).' </td>
+		<td> '.Utilities::filesizeInterpreter($image->getFilesize()).' </td>
 		</tr>
 
 		<tr>
 		<th> MimeType </th>
-		<td> '.$imageData["MimeType"].' </td>
+		<td> '.$image->getMimetype().' </td>
 		</tr>
 
 		<tr>
 		<th> Resolution </th>
-		<td> '.$imageData["COMPUTED"]["Width"].'x'.$imageData["COMPUTED"]["Height"].' </td>
+		<td> '.$image->getMetadata()['width'].'x'.$image->getMetadata()['height'].' </td>
 		</tr>
 
         <tr>
         <th> Keywords </th>
         <td> ';
-foreach ($keywords as $value) {
+foreach ($image->getTags() as $value) 
+{
     echo '<a href="search/?keyword='.htmlentities($value).'" >'.$value.'</a>, ';
 }
 
@@ -86,7 +104,11 @@ echo
 
 </div>
 ';
+$fstop = $image->getMetadata()['exfi:FNumber'];
+if(preg_match('/(\d+)(?:\s*)([\/])(?:\s*)(\d+)/', $fstop, $matches) !== FALSE){
 
+    $fstop = $matches[1] / $matches[3];
+}
 echo 
 '<div class="object"> 
 	<header>
@@ -95,57 +117,59 @@ echo
 	<table>
 		<tr>
 		<th> Camera Make </th>
-		<td> '.$imageData["Make"].' </td>
+		<td> '.$image->getMetadata()['exfi:Make'].' </td>
 		</tr>
 
 		<tr>
 		<th> Camera Model </th>
-		<td> '.$imageData["Model"].' </td>
+		<td> '.$image->getMetadata()['exfi:Model'].' </td>
 		</tr>
 
 		<tr>
 		<th> Lens Info </th>
-		<td> '.$imageData["UndefinedTag:0xA434"].' </td>
+		<td> '.$image->getMetadata()['exfi:UndefinedTag:0xA434'].' </td>
 		</tr>
 
 		<tr>
 		<th> Focal Length </th>
-		<td> '.$imageData["FocalLengthIn35mmFilm"].' mm </td>
+		<td> '.$image->getMetadata()['exfi:FocalLengthIn35mmFilm'].' mm </td>
 		</tr>
 
 		<tr>
 		<th> Shutter Speed </th>
-		<td> '.$imageData["ExposureTime"].' </td>
+		<td> '.$image->getMetadata()['exfi:ExposureTime'].' </td>
 		</tr>
 
 		<tr>
 		<th> Apature </th>
-		<td> f/'.round(floatval($imageData["FNumber"]),1).' </td>
+		<td> f/'.$fstop.' </td>
 		</tr>
 
 		<tr>
 		<th> ISO </th>
-		<td> '.$imageData["ISOSpeedRatings"].' </td>
+		<td> '.$image->getMetadata()['exfi:ISOSpeedRatings'].' </td>
 		</tr>
 
 		<tr>
 		<th> Taken </th>
-		<td> '.$imageData["DateTimeOriginal"].' </td>
+		<td> '.$image->getMetadata()['exfi:DateTimeOriginal'].' </td>
 		</tr>
 
 		<tr>
 		<th> Software </th>
-		<td> '.$imageData["Software"].' </td>
+		<td> '.$image->getMetadata()['exfi:Software'].' </td>
 		</tr>
 	</table>
 
 </div>
 ';
 
-echo "Image info dump<pre>";
-var_dump($imageData);
+//echo "Image info dump<pre>";
+//var_dump($imageData);
 
 
 echo "</pre>";
-echo $SM->fPrintFooter();
 ?>		
+</body>
+
+</html>
