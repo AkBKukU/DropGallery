@@ -97,11 +97,11 @@ class FileInfo{
 	 */
 	private function loadBasicData()
 	{
+		$this->filename = basename($this->filepath);
 		$this->title = $this->filename;
 		$this->description = $this->filename;
 		$this->mimetype = mime_content_type($this->filepath);
 		$this->dateGathered = date('Y-m-d').'T'.date('h:i:s');
-		$this->filename = basename($this->filepath);
 		$this->filesize = filesize($this->filepath);
 
 		$this->data['path'] = $this->filepath;

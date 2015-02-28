@@ -53,7 +53,7 @@ echo
 
 <h1> Red: '.$idred.', Blue: '.$idblue.'</h1>
 
-<div class="object" onload="hidedgBigView()" > 
+<div class="object"> 
 	<header>
 		<h3>Picture Info</h3>
 	</header>

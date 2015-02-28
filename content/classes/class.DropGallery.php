@@ -110,26 +110,21 @@ class DropGallery{
         $galdir = new DirectoryIterator($this->galleryPath);
         foreach( $galdir as $entry )
         {    
-        	if (!is_dir($this->galleryPath.'/'.$entry->getFilename()))
-        	{
-	        	$id=$this->quickhash($this->galleryPath.'/'.$entry->getFilename());
-	        	$newFileTest = $this->db->checkForQuickHash($id);
-	        	if($newFileTest)
-	        	{
-	        		$this->addNewFile($id,$entry->getFilename());
-	        	}
-        	}
             if ( ! $entry->isDot() ) 
             {
                 if ( $entry->isFile() )
                 {
-                    $info = pathinfo($entry->getPath());
-                    $this->dirContents[] = array( 
-                                'name' => $entry->getFilename(),
-                                'title' => $entry->getFilename(),
-                                'path' => $this->galleryPath.'/'.$entry->getFilename(),
-                                'htmlpath'    => $this->htmlPath.'/'.$entry->getFilename()
-                            );
+
+		        	$id=$this->quickhash($this->galleryPath.'/'.$entry->getFilename());
+		        	$newFileTest = $this->db->checkForQuickHash($id);
+		        	if($newFileTest)
+		        	{
+		        		$this->addNewFile($id,$entry->getFilename());
+		        	}else
+		        	{
+		        		$this->dirContents[] = $this->getFileInfo($id,$entry->getFilename());
+		        	}
+
                 }
                 elseif( $entry->isDir() )
                 {
@@ -178,6 +173,23 @@ class DropGallery{
         
 		$image = new FileInfo($this->galleryPath.'/'.$newFile);
 		$this->db->addNewFile($id,$image->getTitle(),$image->getDescription() , $image->getMimetype() , $image->getFilename() , $image->getFilesize());
+    }
+
+    /*
+     * getFileInfo
+     * 
+     * Runs startup commands
+     */
+    public function getFileInfo($id,$name)
+    {
+		$this->db->getFileBasic($id);
+
+		return array( 
+            'name' => $name,
+            'title' => $this->db->getFileBasic($id),
+            'path' => $this->galleryPath.'/'.$name,
+            'htmlpath'    => $this->htmlPath.'/'.$name
+        );
     }
 }
 ?>

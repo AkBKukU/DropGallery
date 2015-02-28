@@ -79,4 +79,4 @@ var hide = function(id)
 
 
 window.onresize = centerdgBigView;
-document.getElementById("dropGallery").
+//document.getElementById("dropGallery").
