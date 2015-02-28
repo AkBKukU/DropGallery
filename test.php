@@ -51,9 +51,9 @@ echo $DG->viewFolderNoDB();
 echo 
 '
 
-<h1> Red: '.$idred.', Blue: '.$idblue.'</h1>
+<h1 id="title"> Red: '.$idred.', Blue: '.$idblue.'</h1>
 
-<div class="object"> 
+<div class="object" onload="openLink()" > 
 	<header>
 		<h3>Picture Info</h3>
 	</header>

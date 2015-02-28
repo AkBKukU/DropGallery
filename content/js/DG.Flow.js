@@ -77,6 +77,16 @@ var hide = function(id)
 
 }
 
+var openLink = function()
+{
+	var hash = window.location.hash.substring(1);
+
+	if( hash != "" )
+	{
+		setBigPicture(hash);
+		showdgBigView(hash);
+	}
+}
 
 window.onresize = centerdgBigView;
-//document.getElementById("dropGallery").
+window.onload = openLink;
