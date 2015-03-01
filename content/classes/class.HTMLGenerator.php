@@ -47,7 +47,7 @@ class HTMLGenerator
 		$fileCounter=0;
 		foreach ($images as $image) 
 		{
-		$thumb = new ThumbGen($image["path"], $image["mimetype"], $image["qhash"], 300, "w");
+		$thumb = new ThumbGen($image["path"], $image["mimetype"], $image["qhash"], 300, $image["htmlpath"],"w");
 		$HTML .= '
 		<figure class="dgalleryFile hoverZoom" id="f'.$fileCounter.'">
 			<a href="#i'.$fileCounter.'">

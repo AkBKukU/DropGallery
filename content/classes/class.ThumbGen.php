@@ -19,18 +19,20 @@ class ThumbGen
 
 	private $mimetype;
 	private $max;
-	private $qhash;
+    private $qhash;
+	private $HTMLPath;
 
     /*
      * constructor
      * 
      * Runs startup commands
      */
-    public function __construct($imagePath, $mimetype, $qhash, $maxDimension, $constrain = "both")
+    public function __construct($imagePath, $mimetype, $qhash, $maxDimension, $HTMLPath,  $constrain = "both")
     {
     	$this->mimetype = $mimetype;
     	$this->max = $maxDimension;
-    	$this->qhash = $qhash;
+        $this->qhash = $qhash;
+    	$this->HTMLPath = $HTMLPath;
     	$jpg = file_exists($this->relPath.$this->const."_".$maxDimension."_".$qhash.".jpg");
     	$png = file_exists($this->relPath.$this->const."_".$maxDimension."_".$qhash.".png");
     	if(! $jpg || ! $png)
@@ -50,11 +52,13 @@ class ThumbGen
     	$type = $this->saveImage();
 		if ($type == "jpg")
 		{
-			return "/content/".$this->relPath.$this->const."_".$this->max."_".$this->qhash.".jpg";	
+			return "/content/".$this->relPath.$this->const."_".$this->max."_".$this->qhash.".jpg\" data-orig=\"".$this->HTMLPath;	
 		}else if ($type == "png")
 		{
-			return "/content/".$this->relPath.$this->const."_".$this->max."_".$this->qhash.".png";	
-		}
+			return "/content/".$this->relPath.$this->const."_".$this->max."_".$this->qhash.".png\" data-orig=\"".$this->HTMLPath;	
+		}else{
+            return $this->HTMLPath."\" data-orig=\"".$this->HTMLPath;
+        }
 
     }
 

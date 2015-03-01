@@ -26,41 +26,49 @@ var centerdgBigView = function()
 	var fullViewImage = document.getElementById("fullViewImage");
 	var fullViewImageBlock = document.getElementById("fullViewImageBlock");
 
-	var image = document.getElementById(currentImageId);
+	var image = document.getElementById("fullViewImage");
 	updateWindowVars();
 
-	var imgAspect = (image.naturalWidth / image.naturalHeight);
-	var viewAspect = (viewPortX/viewPortY);
-	var maxWidthForHeight = ((image.naturalWidth/image.naturalHeight)*viewPortY);
+	//alert("Image: " + image.src+"\n"+"Size: "+image.naturalWidth+"x"+image.naturalHeight);
 
-	fullViewImageBlock.style.width = image.naturalWidth+"px";
+	var imgAspect = (fullViewImage.naturalWidth / fullViewImage.naturalHeight);
+	var imgAspectOp = (fullViewImage.naturalHeight/fullViewImage.naturalWidth);
+	var viewAspect = (viewPortX/viewPortY);
+	var maxWidthForHeight = ((fullViewImage.naturalWidth/fullViewImage.naturalHeight)*viewPortY);
+
+	fullViewImageBlock.style.width = fullViewImage.naturalWidth+"px";
+	var newWidth = fullViewImageBlock.style.width;
 	//image is bigger than view in both dimensions
 	if( image.naturalWidth > viewPortX && image.naturalHeight > viewPortY )
 	{
 		//image aspect ratio is taller the viewport
 		if (imgAspect < viewAspect)
 		{
-			fullViewImageBlock.style.width = maxWidthForHeight+"px";
+			newWidth = maxWidthForHeight;
 		}else{
-			fullViewImageBlock.style.width = viewPortX+"px";
+			newWidth = viewPortX;
 		}
 
 	//image is taller than view
 	}else if( image.naturalHeight > viewPortY )
 	{
-		fullViewImageBlock.style.width = maxWidthForHeight+"px";
+		newWidth = maxWidthForHeight;
 	}
 
 	//image is wider than view
 	else if( image.naturalWidth > viewPortX )
 	{
-		fullViewImageBlock.style.width = viewPortX+"px";
+		newWidth = viewPortX;
 	}
 
+	fullViewImageBlock.style.width = newWidth+"px";
+	var newHeight = imgAspectOp * newWidth;
+
+
 	//rendered image is shorter than view
-	if( fullViewImage.height < viewPortY )
+	if( newHeight < viewPortY )
 	{
-		fullViewImageBlock.style.top = 	(viewPortY/2 - fullViewImage.height/2)+"px";
+		fullViewImageBlock.style.top = 	(viewPortY/2 - newHeight/2)+"px";
 	}else
 	{
 		fullViewImageBlock.style.top = "0px";
@@ -68,7 +76,7 @@ var centerdgBigView = function()
 	
 
 
-	console.log("centerdgBigView: "+image.height);
+	console.log("centerdgBigView: "+fullViewImage.height);
 	console.log("Fit width: " + (fullViewImage.offsetWidth / fullViewImage.offsetHeight ) * viewPortX);
 }
 
@@ -77,9 +85,12 @@ var setBigPicture = function(id)
 	var fullViewImage = document.getElementById("fullViewImage");
 	var newImage = document.getElementById(id);
 	
-	fullViewImage.src = newImage.src;
+	fullViewImage.src = newImage.dataset.orig;
 	currentImageId=id;
-	showdgBigView();
+	fullViewImage.onload=function()
+	{
+	showdgBigView();	
+	}
 }
 
 var hidedgBigView = function()
@@ -100,11 +111,11 @@ var backgroundHideBigView = function(e)
     }
 }
 
-var showdgBigView = function(id)
+var showdgBigView = function()
 {
-	show("fullView");
 	console.log("showdgBigView");
-	centerdgBigView(id);
+	centerdgBigView();
+	show("fullView");
 }
 
 var show = function(id)
@@ -127,7 +138,6 @@ var openLink = function()
 	if( hash != "" )
 	{
 		setBigPicture(hash);
-		showdgBigView(hash);
 	}
 }
 
