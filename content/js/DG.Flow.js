@@ -71,6 +71,16 @@ var hidedgBigView = function()
 	hide("fullView");
 }
 
+var backgroundHideBigView = function(e)
+{
+	if(
+		e.target == document.getElementById('fullView') ||
+		e.target == document.getElementById('fullViewFig')
+		) 
+	{
+    	hidedgBigView();
+    }
+}
 
 var showdgBigView = function(id)
 {

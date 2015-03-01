@@ -18,7 +18,7 @@ class HTMLGenerator
 
 		$HTML='
 <div id="dropGallery" class="seamless">
-	<div id="fullView" onClick="" style="display:none;">
+	<div id="fullView" onClick="backgroundHideBigView(event)" style="display:none;">
 		<figure id="fullViewFig" onClick="">
 			<div id="fullViewImageBlock" onClick="">
 				
