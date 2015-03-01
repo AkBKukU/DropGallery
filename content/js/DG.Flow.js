@@ -66,9 +66,12 @@ var centerdgBigView = function()
 
 
 	//rendered image is shorter than view
-	if( newHeight < viewPortY )
+	if( newHeight < viewPortY)
 	{
 		fullViewImageBlock.style.top = 	(viewPortY/2 - newHeight/2)+"px";
+	}else if(image.naturalHeight < viewPortY )
+	{
+		fullViewImageBlock.style.top = 	(viewPortY/2 - image.naturalHeight/2)+"px";
 	}else
 	{
 		fullViewImageBlock.style.top = "0px";
@@ -137,6 +140,7 @@ var openLink = function()
 
 	if( hash != "" )
 	{
+		alert(hash);
 		setBigPicture(hash);
 	}
 }
