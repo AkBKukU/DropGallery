@@ -150,6 +150,7 @@ class ThumbGen
 		imagefilledrectangle($this->output,0,0,$this->outWidth, $this->outHeight,$col);
 		imagealphablending($this->output,true);
 		imagecopyresampled($this->output, $this->image, 0, 0, 0, 0, $this->outWidth, $this->outHeight, $this->imgWidth, $this->imgHeight);
+        imagesavealpha($this->output,true);
     }
 
     public function getImage($imagePath,$mimetype)
