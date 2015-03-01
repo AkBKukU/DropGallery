@@ -1,6 +1,7 @@
 <?php
 require_once('class.Utilities.php');
 require_once('class.FileInfo.php');
+require_once('class.ThumbGen.php');
 require_once('class.HTMLGenerator.php');
 require_once('getid3/getid3.php');
 require_once('class.DropGalleryDBInterface.php');
@@ -182,11 +183,13 @@ class DropGallery{
      */
     public function getFileInfo($id,$name)
     {
-		$this->db->getFileBasic($id);
+		$fileData = $this->db->getFileBasic($id);
 
 		return array( 
             'name' => $name,
-            'title' => $this->db->getFileBasic($id),
+            'qhash' => $id,
+            'title' => $fileData["title"],
+            'mimetype' => $fileData["mimetype"],
             'path' => $this->galleryPath.'/'.$name,
             'htmlpath'    => $this->htmlPath.'/'.$name
         );

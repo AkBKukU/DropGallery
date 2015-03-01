@@ -143,8 +143,8 @@ INSERT INTO files ( quickhash , title , description , id_mimetype , datetime_add
     public function getFileBasic($id)
     {
     	$stmt = $this->mysqli->prepare('
-SELECT files.title
-FROM files 
+SELECT files.title, mimetypes.mimetype
+FROM files JOIN mimetypes USING(id_mimetype)
 WHERE files.quickhash = ?
 ');
     	$error = $this->mysqli->error;
@@ -152,10 +152,10 @@ WHERE files.quickhash = ?
     	{	
 	    	$stmt->bind_param("s", $id);
     		$stmt->execute();
-    		$stmt->bind_result($title);
+    		$stmt->bind_result($data["title"],$data["mimetype"]);
     		$stmt->fetch();
     		$stmt->close();
-    		return $title;
+    		return $data;
     	}else{
     		echo $error;
 			return false;
