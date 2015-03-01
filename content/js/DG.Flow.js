@@ -34,6 +34,21 @@ var centerdgBigView = function()
 	{
 		fullViewImageBlock.style.width = ((image.naturalWidth/image.naturalHeight)*viewPortY)+"px";
 	}
+	else if( image.naturalWidth > viewPortX )
+	{
+		fullViewImageBlock.style.width = viewPortX;
+	}
+
+	if( image.naturalHeight < viewPortY )
+	{
+		fullViewImageBlock.style.top = 	(viewPortY/2 - image.naturalHeight/2)+"px";
+	}
+	else
+	{
+		fullViewImageBlock.style.top = "0px";
+	}
+	
+
 
 	console.log("centerdgBigView");
 	console.log("Fit width: " + (fullViewImage.offsetWidth / fullViewImage.offsetHeight ) * viewPortX);
