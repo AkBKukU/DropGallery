@@ -1,0 +1,13 @@
+#dropGalleryDebug 
+{
+	color:						#ffffff;
+
+	background:					rgb(10, 10, 10);
+
+	padding:					2em;
+}
+
+#dropGalleryDebug .debugTime 
+{
+	color:						#ff8888;
+}

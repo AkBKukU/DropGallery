@@ -15,12 +15,16 @@ class ThumbGen
 	private $outHeight;
 
 	private $relPath = "generated/thumbnails/";
+	private $thumbPath;
+	private $thumbHTMLPath;
 	private $const;
 
 	private $mimetype;
 	private $max;
     private $qhash;
 	private $HTMLPath;
+	private $support;
+	private $use = true;
 
     /*
      * constructor
@@ -33,41 +37,129 @@ class ThumbGen
     	$this->max = $maxDimension;
         $this->qhash = $qhash;
     	$this->HTMLPath = $HTMLPath;
-    	$jpg = file_exists($this->relPath.$this->const."_".$maxDimension."_".$qhash.".jpg");
-    	$png = file_exists($this->relPath.$this->const."_".$maxDimension."_".$qhash.".png");
-    	if(! $jpg || ! $png)
-    	{
-			list($this->imgWidth, $this->imgHeight) = getimagesize($imagePath);
-			$this->aspectToWidth = $this->imgWidth / $this->imgHeight;
-			$this->aspectToHeight = $this->imgHeight / $this->imgWidth;
-			$this->getDimensions($maxDimension,$constrain);
 
-	    	$this->image = $this->getImage($imagePath,$mimetype);
-	    	$this->generateImage();
+    	$this->support = $this->supportCheck($this->mimetype);
+
+    	if($this->support)
+	    {
+	    	$this->getConst($constrain);
+	    	$this->getThumbFilePath();
+	    	if(! file_exists($this->thumbPath) )
+	    	{
+				list($this->imgWidth, $this->imgHeight) = getimagesize($imagePath);
+				$this->aspectToWidth = $this->imgWidth / $this->imgHeight;
+				$this->aspectToHeight = $this->imgHeight / $this->imgWidth;
+				$this->getDimensions($maxDimension,$constrain);
+
+				if($this->imgWidth > $this->outWidth)
+				{
+			    	$this->image = $this->getImage($imagePath,$mimetype);
+			    	$this->generateImage();
+	    			$this->saveImage();	
+				}else{
+	    			$this->use = false;
+				}
+	    	}    		
     	}
+
+    }
+
+    public function supportCheck($mimetype)
+    {
+    	switch ($mimetype)
+		{
+			case 'image/jpeg':
+			case 'image/pjpeg':
+			case 'image/x‑xbitmap':
+			case 'image/x‑xbm':
+			case 'image/x‑xpixmap':
+			case 'image/vnd.wap.wbmp':
+			case 'image/webp':
+			case 'image/png':
+			case 'image/gif':
+				return true;
+				break;
+
+			default:
+				return false;
+				break;
+		}
+	
+    }
+
+    public function getThumbFilePath()
+    {
+    	$filename=$this->const."_".$this->max."_".$this->qhash;
+    	$this->thumbPath= dirname(dirname(__FILE__))."/".$this->relPath.$filename;
+    	$this->thumbHTMLPath= "/content/".$this->relPath.$filename;
+    	switch ($this->mimetype)
+		{
+			case 'image/jpeg':
+			case 'image/pjpeg':
+			case 'image/x‑xbitmap':
+			case 'image/x‑xbm':
+			case 'image/x‑xpixmap':
+			case 'image/vnd.wap.wbmp':
+				$this->thumbPath .= ".jpg";
+				$this->thumbHTMLPath .= ".jpg";
+				break;
+
+			case 'image/webp':
+			case 'image/png':
+			case 'image/gif':
+				$this->thumbPath .= ".png";
+				$this->thumbHTMLPath .= ".png";
+				break;
+
+			default:
+				return false;
+				break;
+		}
+	
     }
 
     public function getThumb()
     {
-    	$type = $this->saveImage();
-		if ($type == "jpg")
-		{
-			return "/content/".$this->relPath.$this->const."_".$this->max."_".$this->qhash.".jpg\" data-orig=\"".$this->HTMLPath;	
-		}else if ($type == "png")
-		{
-			return "/content/".$this->relPath.$this->const."_".$this->max."_".$this->qhash.".png\" data-orig=\"".$this->HTMLPath;	
-		}else{
+    	if ($this->support && $this->use)
+    	{
+			return $this->thumbHTMLPath."\" data-orig=\"".$this->HTMLPath;
+    	}else{
             return $this->HTMLPath."\" data-orig=\"".$this->HTMLPath;
         }
 
     }
 
-    public function getDimensions($max,$constrain)
+    public function getConst($constrain)
     {
     	switch ( strtoupper($constrain) ) {
     		case 'WH':
     		case 'XY':
     		case 'BOTH':
+    			$this->const = "b";
+    			break;
+
+    		case 'H':
+    		case 'Y':
+    		case 'HEIGHT':
+    			$this->const = "h";
+    			break;
+    		
+    		case 'W':
+    		case 'X':
+    		case 'WIDTH':		
+    			$this->const = "w";
+    			break;
+    		
+    		default:
+    			
+    			break;
+    	}
+    }
+
+    public function getDimensions($max)
+    {
+    	switch ( $this->const ) {
+    		case 'b':
 
     			if ( $this->aspectToWidth < 1 )
     			{
@@ -77,27 +169,20 @@ class ThumbGen
 	    			$this->outWidth = $this->aspectToWidth * $max;
 	    			$this->outHeight = $max;	
     			}
-    			$this->const = "b";
     			break;
 
-    		case 'H':
-    		case 'Y':
-    		case 'HEIGHT':
+    		case 'h':
     			$this->outWidth = $this->aspectToWidth * $max;
     			$this->outHeight = $max;
-    			$this->const = "h";
     			break;
     		
-    		case 'W':
-    		case 'X':
-    		case 'WIDTH':
+    		case 'w':
     			$this->outHeight = $this->aspectToHeight * $max;
-    			$this->outWidth = $max;    			
-    			$this->const = "w";
+    			$this->outWidth = $max;  
     			break;
     		
     		default:
-    			# code...
+    			
     			break;
     	}
     }

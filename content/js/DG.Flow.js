@@ -140,7 +140,7 @@ var openLink = function()
 
 	if( hash != "" )
 	{
-		alert(hash);
+		//alert(hash);
 		setBigPicture(hash);
 	}
 }

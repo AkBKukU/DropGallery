@@ -12,6 +12,7 @@ class HTMLGenerator
 	
 	static function flow ($images,$folders)
 	{
+        DropGallery::debug("Start HTML gen");
 /*
 
 */
@@ -49,9 +50,9 @@ class HTMLGenerator
 		{
 		$thumb = new ThumbGen($image["path"], $image["mimetype"], $image["qhash"], 500, $image["htmlpath"],"w");
 		$HTML .= '
-		<figure class="dgalleryFile hoverZoom" id="f'.$fileCounter.'">
+		<figure class="dgalleryFile hoverZoom" id="f'.$fileCounter.'" >
 			<a href="#i'.$image["qhash"].'">
-				<div class="imageBlock">
+				<div class="imageBlock" hieght="">
 					<img id="i'.$fileCounter.'" src="'.$thumb->getThumb().'" onclick="setBigPicture(this.id)">
 					<figcaption>'.$image['title'].'</figcaption>
 				</div>
@@ -67,6 +68,7 @@ class HTMLGenerator
 		$HTML .= '
 </div>';
 
+        DropGallery::debug("End HTML gen");
 		return $HTML;
 	}
 }

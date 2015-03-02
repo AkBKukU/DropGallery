@@ -15,6 +15,11 @@ class DropGallery{
     private $dirContents;
     private $db;
 
+    public static $debugText = "";
+    public static $debugEnable = true;
+
+    private static $start_time;
+
     /*
      * constructor
      * 
@@ -22,10 +27,14 @@ class DropGallery{
      */
     public function __construct()
     {
+    	DropGallery::$start_time = microtime(true);
     	$this->db = new DropGalleryDBInterface();
         $this->galleryPath = $_SERVER['DOCUMENT_ROOT'].$this->htmlPath;
 
+        DropGallery::debug("Opening: ".$this->galleryPath);
+
         $this->getFileList();
+        DropGallery::debug("Finished Filelist");
     }
 
     /*
@@ -45,6 +54,8 @@ class DropGallery{
      */
     public function getQuickIds()
     {
+
+        DropGallery::debug("Start quick ids");
         $count = count($this->dirContents);
         for ($i = 0; $i < $count; $i++) 
         {
@@ -65,6 +76,8 @@ class DropGallery{
             fclose($imageHandle);
             $this->dirSubFolders[$i]['id']=md5($firstk.$lastk);
         }
+
+        DropGallery::debug("End quick ids");
     }
 
     /*
@@ -81,6 +94,7 @@ class DropGallery{
         fseek($fileHandle, $size - 4096);
         $lastk=fread($fileHandle, 4096);
         fclose($fileHandle);
+        
         return md5($firstk.$size.$lastk);
     }
 
@@ -95,6 +109,7 @@ class DropGallery{
         $folders;
         $files;
 
+        DropGallery::debug("Start get files");
 
         if ( ! file_exists($this->galleryPath) ) 
         {
@@ -149,6 +164,8 @@ class DropGallery{
                 }
             }
         }
+
+        DropGallery::debug("End get files");
     }
 
 
@@ -194,5 +211,26 @@ class DropGallery{
             'htmlpath'    => $this->htmlPath.'/'.$name
         );
     }
+
+    public static function debug($text)
+    {
+    	DropGallery::$debugText .= '<span class="debugTime">['.(microtime(true) - DropGallery::$start_time).']</span> '."\t".$text."\n";
+    }
+
+    /*
+     * destructor 
+     * 
+     * Closes database conection
+     */
+    function __destruct() {
+        
+        DropGallery::debug("Fin");
+        if ( DropGallery::$debugEnable )
+        {
+	        echo '<pre id="dropGalleryDebug">'.DropGallery::$debugText.'</pre>';
+        }
+        
+    }
+
 }
 ?>
