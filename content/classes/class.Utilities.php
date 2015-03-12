@@ -9,6 +9,9 @@
 
 class Utilities{
 
+	/*
+	 * Takes a number of bytes and converts it to a readable string. Works up to GB.
+	 */
     public static function filesizeInterpreter ($bytes)
     {
         //Gigbyte size

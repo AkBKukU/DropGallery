@@ -11,23 +11,23 @@
 <?php 
 error_reporting(E_ALL);
 ini_set('display_errors', '1');
-require_once('content/classes/class.DropGallery.php');
 
+
+
+/*                                                                            *\
+                              Drop Gallery
+\*                                                                             */
+require_once('content/classes/class.DropGallery.php');
 $DG = new DropGallery();
 
-
-echo '
-<link rel=StyleSheet href="content/styles/DG.Flow.css" type="text/css">
-<script type="text/javascript" src="content/js/DG.Flow.js" ></script>
-';
+$DG->addType("flow");
 
 echo $DG->viewFolderNoDB();
 
-//echo "Image info dump<pre>";
-//var_dump($imageData);
+/*                                                                            *\
+                              /Drop Gallery
+\*                                                                            */
 
-
-echo "</pre>";
 ?>		
 </body>
 

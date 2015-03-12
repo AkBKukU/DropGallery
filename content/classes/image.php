@@ -1,5 +1,7 @@
 <?php
 
+//Not used. just for refrence
+
 // File and new size
 $name = $_GET['file'];
 $size = 0;

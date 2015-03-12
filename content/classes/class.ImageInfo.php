@@ -1,4 +1,7 @@
 <?php
+
+//Not used. just for refrence
+
 class FileInfo{
 
     private $filepath;

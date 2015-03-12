@@ -33,8 +33,6 @@ class FileInfo{
 	}
 
 	/*
-	 * getFileInfo
-	 * 
 	 * Returns files info
 	 */
 	public function getFileInfo()
@@ -44,8 +42,6 @@ class FileInfo{
 
 	
 	/*
-	 * loadFileInfo
-	 *
 	 * Read metadata from files.
 	 */
 	private function loadFileInfo()
@@ -91,8 +87,6 @@ class FileInfo{
 	}
 
 	/*
-	 * loadBasicData
-	 * 
 	 * Gets generic file information
 	 */
 	private function loadBasicData()
@@ -123,8 +117,6 @@ class FileInfo{
 	}
 
 	/*
-	 * loadExfiData
-	 * 
 	 * WARNING - Reursion is started here!
 	 *
 	 * gets Exfi specific data. Mostly for camera info from jpegs
@@ -146,8 +138,6 @@ class FileInfo{
 	}
 
 	/*
-	 * flattenArray
-	 * 
 	 * WARNING - Reursive function
 	 *
 	 * Flatens multi dimensional array
@@ -169,8 +159,6 @@ class FileInfo{
 
 
 	/*
-	 * loadIPTCKeywords
-	 *
 	 * Read keywords from IPTC header
 	 */
 	private function loadIPTCKeywords()
@@ -179,10 +167,10 @@ class FileInfo{
 
 		//var_dump(iptcparse($iptcInfoRaw["APP13"]));
 
-		# Test for loaded IPTC data
+		// Test for loaded IPTC data
 		if(is_array($iptcInfoRaw) && isset($iptcInfoRaw["APP13"])) 
 		{   
-			# Parse data
+			// Parse data
 			$iptc = iptcparse($iptcInfoRaw["APP13"]);
 
 			if(isset($iptc["2#025"]))

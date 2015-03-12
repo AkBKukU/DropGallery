@@ -33,6 +33,12 @@ class DropGalleryDBInterface{
         
     }
     
+
+    /*
+     * Checks if a files quickhash has already been stored in the database 
+	 *
+     * Returns bool
+     */
     public function checkForQuickHash($hash)
     {
     	$stmt = $this->mysqli->prepare("
@@ -61,7 +67,11 @@ WHERE files.quickhash = ?
     }
 
 
-    
+    /*
+	 * Checks if a mimetype has already been added to the db
+	 * 
+	 * Returns bool
+     */
     public function checkMimetype($mimetype)
     {
     	$firstRun=true;
@@ -102,6 +112,9 @@ WHERE mimetypes.mimetype = ?
     }
 
     
+    /*
+     * Adds a mimtype to the db
+     */
     public function addMimetype($mimetype)
     {
     	$stmt = $this->mysqli->prepare("
@@ -120,6 +133,9 @@ INSERT INTO mimetypes(mimetype) VALUES
     	}
     }
     
+    /*
+     * Adds new file to the database.
+     */
     public function addNewFile($id,$title,$description , $mimetype , $filename , $filesize)
     {
     	$id_mimetype = $this->checkMimetype($mimetype);
@@ -140,6 +156,9 @@ INSERT INTO files ( quickhash , title , description , id_mimetype , datetime_add
     }
 
     
+    /*
+     * Gets basic information from the db for the supplied qiuck id
+     */
     public function getFileBasic($id)
     {
     	$stmt = $this->mysqli->prepare('

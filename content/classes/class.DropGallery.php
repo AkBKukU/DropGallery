@@ -37,6 +37,27 @@ class DropGallery{
         DropGallery::debug("Finished Filelist");
     }
 
+
+    /*
+     * Sets the display type for the gallery. 
+     * Currently only flow is availible
+     */
+    public function addType($type)
+    {
+		switch (strtoupper($type)) {
+			case 'FLOW':
+echo '
+<link rel=StyleSheet href="content/styles/DG.Flow.css" type="text/css">
+<script type="text/javascript" src="content/js/DG.Flow.js" ></script>
+';
+				break;
+			
+			default:
+				# code...
+				break;
+		}
+    }
+
     /*
      * viewFolderNoDB
      * 
@@ -47,38 +68,6 @@ class DropGallery{
         return HTMLGenerator::flow($this->dirContents, $this->dirSubFolders);
     }
 
-    /*
-     * constructor
-     * 
-     * Runs startup commands
-     */
-    public function getQuickIds()
-    {
-
-        DropGallery::debug("Start quick ids");
-        $count = count($this->dirContents);
-        for ($i = 0; $i < $count; $i++) 
-        {
-            $imageHandle=fopen($this->dirContents[$i]['path'], 'r');
-            $firstk=fread($imageHandle, 4096);
-            fseek($imageHandle, filesize($this->dirContents[$i]['path']) - 4096);
-            $lastk=fread($imageHandle, 4096);
-            fclose($imageHandle);
-            $this->dirContents[$i]['id']=md5($firstk.$lastk);
-        }
-        $count = count($this->dirSubFolders);
-        for ($i = 0; $i < $count; $i++) 
-        {
-            $imageHandle=fopen($this->dirSubFolders[$i]['path'], 'r');
-            $firstk=fread($imageHandle, 4096);
-            fseek($imageHandle, filesize($this->dirSubFolders[$i]['path']) - 4096);
-            $lastk=fread($imageHandle, 4096);
-            fclose($imageHandle);
-            $this->dirSubFolders[$i]['id']=md5($firstk.$lastk);
-        }
-
-        DropGallery::debug("End quick ids");
-    }
 
     /*
      * quickhash
@@ -100,9 +89,11 @@ class DropGallery{
 
 
     /*
-     * constructor
+     * getFileList
      * 
-     * Runs startup commands
+     * Runs through files in folder and checks the against DB.
+	 * 
+     * TODO - Simplify this.
      */
     public function getFileList()
     {   
@@ -169,22 +160,10 @@ class DropGallery{
     }
 
 
-    /*
-     * constructor
-     * 
-     * Runs startup commands
-     */
-    public function getGalleryPath()
-    {
-        return $this->galleryPath;
-    }
-
 
 
     /*
-     * constructor
-     * 
-     * Runs startup commands
+     * Gets file info amd sends it to the database interface to be added
      */
     public function addNewFile($id, $newFile)
     {
@@ -194,9 +173,7 @@ class DropGallery{
     }
 
     /*
-     * getFileInfo
-     * 
-     * Runs startup commands
+     * Gets basic file info from db interface and returns it in easy to use variable
      */
     public function getFileInfo($id,$name)
     {
@@ -212,6 +189,10 @@ class DropGallery{
         );
     }
 
+
+    /*
+     * Static debug function to add a message to the debug output
+     */
     public static function debug($text)
     {
     	DropGallery::$debugText .= '<span class="debugTime">['.(microtime(true) - DropGallery::$start_time).']</span> '."\t".$text."\n";
@@ -220,7 +201,7 @@ class DropGallery{
     /*
      * destructor 
      * 
-     * Closes database conection
+     * Tests if debug should be show and prints it if so
      */
     function __destruct() {
         
@@ -231,6 +212,13 @@ class DropGallery{
         }
         
     }
+
+
+    public function getGalleryPath()
+    {
+        return $this->galleryPath;
+    }
+
 
 }
 ?>

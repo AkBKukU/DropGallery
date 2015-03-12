@@ -15,6 +15,20 @@ CREATE TABLE files
 	PRIMARY KEY (id_file)
 );
 
+CREATE TABLE files_hidden 
+(
+	id_file INTEGER NOT NULL AUTO_INCREMENT,
+	quickhash VARCHAR(32) NOT NULL,
+	title VARCHAR(80) NULL DEFAULT NULL,
+	description VARCHAR(500) NULL DEFAULT NULL,
+	id_mimetype INTEGER NOT NULL COMMENT 'http://www.iana.org/assignments/media-types/media-types.xhtm',
+	datetime_added DATETIME NOT NULL,
+	filename VARCHAR(200) NOT NULL,
+	filesize INTEGER NOT NULL,
+	PRIMARY KEY (id_file)
+);
+
+
 CREATE TABLE file_tags
 (
 	id_file INTEGER NOT NULL,

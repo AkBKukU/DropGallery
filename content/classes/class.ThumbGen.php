@@ -1,5 +1,15 @@
 <?php
+/*                                                                            *\
+                                  ThumbGen
 
+Creates thumbnails on an adhoc use case. The files are not created until they 
+are needed. It can make thumbnails of any size as long as the dimensions are 
+smaller than the original image. The thumbnails take a single size value that 
+constrains the thumbnail. The constraint either is the width or height to make 
+the thumbnail or set to both will not let the image be larger in either 
+dimension.
+
+\*                                                                            */
 class ThumbGen
 {
 	
@@ -29,7 +39,7 @@ class ThumbGen
     /*
      * constructor
      * 
-     * Runs startup commands
+     * Determines if a thumbnail exists for given image and creates it if not
      */
     public function __construct($imagePath, $mimetype, $qhash, $maxDimension, $HTMLPath,  $constrain = "both")
     {
@@ -64,6 +74,10 @@ class ThumbGen
 
     }
 
+
+    /*
+     * Checks if the image is a supported type to be generated
+     */
     public function supportCheck($mimetype)
     {
     	switch ($mimetype)
@@ -87,6 +101,9 @@ class ThumbGen
 	
     }
 
+    /*
+     * Determines the thumbnails path using the constraint, size, id, and need for transparency
+     */
     public function getThumbFilePath()
     {
     	$filename=$this->const."_".$this->max."_".$this->qhash;
@@ -118,6 +135,9 @@ class ThumbGen
 	
     }
 
+    /*
+     * Returns URI for the thumbnail and an aditional data attribute for use with javascript to find the original image
+     */
     public function getThumb()
     {
     	if ($this->support && $this->use)
@@ -129,14 +149,12 @@ class ThumbGen
 
     }
 
+    /*
+     * Determines the method to be used to constrain the size of the thumbnail
+     */ 
     public function getConst($constrain)
     {
     	switch ( strtoupper($constrain) ) {
-    		case 'WH':
-    		case 'XY':
-    		case 'BOTH':
-    			$this->const = "b";
-    			break;
 
     		case 'H':
     		case 'Y':
@@ -150,12 +168,18 @@ class ThumbGen
     			$this->const = "w";
     			break;
     		
+    		case 'WH':
+    		case 'XY':
+    		case 'BOTH':
     		default:
-    			
+    			$this->const = "b";
     			break;
     	}
     }
 
+    /*
+     * Calculates thumbnail dimensions based on constraint
+     */ 
     public function getDimensions($max)
     {
     	switch ( $this->const ) {
@@ -187,6 +211,9 @@ class ThumbGen
     	}
     }
 
+    /*
+     * Writes the thumbnail image to a file
+     */ 
     public function saveImage()
     {
     	if(explode("/", $this->mimetype)[0] == 'image')
@@ -219,6 +246,9 @@ class ThumbGen
     	}
     }
 
+    /*
+     * Calculate the quality of the jpeg thumbnail to use with a limit of 20
+     */ 
     public function calcQuality($max)
     {
     	$qual = ($max / 500)*100 + 20;
@@ -231,6 +261,10 @@ class ThumbGen
 
     }
 
+
+    /*
+     * Creates the thumbnail image from the file
+     */ 
     public function generateImage()
     {
 		$this->output = imagecreatetruecolor($this->outWidth, $this->outHeight);
@@ -242,6 +276,9 @@ class ThumbGen
         imagesavealpha($this->output,true);
     }
 
+    /*
+     * Load the raw image from the file based on the mimetype
+     */ 
     public function getImage($imagePath,$mimetype)
     {
     	$imageImport;
