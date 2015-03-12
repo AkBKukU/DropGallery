@@ -111,7 +111,7 @@ class FileInfo{
 		$this->data['modifyDate'] = date("F d Y H:i:s.", $this->data['modifyDateExact']);
 
 		$this->data['mimetype'] = mime_content_type($this->data['path']);
-		$this->data['mimetypeType'] = explode("/", $this->data['mimetype'])[0];
+	//	$this->data['mimetypeType'] = explode("/", $this->data['mimetype'])[0];
 
 
 	}

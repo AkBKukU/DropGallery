@@ -108,7 +108,7 @@ class ThumbGen
     {
     	$filename=$this->const."_".$this->max."_".$this->qhash;
     	$this->thumbPath= dirname(dirname(__FILE__))."/".$this->relPath.$filename;
-    	$this->thumbHTMLPath= "/content/".$this->relPath.$filename;
+    	$this->thumbHTMLPath= "content/".$this->relPath.$filename;
     	switch ($this->mimetype)
 		{
 			case 'image/jpeg':
@@ -216,33 +216,29 @@ class ThumbGen
      */ 
     public function saveImage()
     {
-    	if(explode("/", $this->mimetype)[0] == 'image')
-    	{
-	    	switch (explode("/", $this->mimetype)[1]) 
-			{
-
-				case 'jpeg':
-				case 'pjpeg':
-				case 'x‑xbitmap':
-				case 'x‑xbm':
-				case 'x‑xpixmap':
-				case 'vnd.wap.wbmp':
-    				imagejpeg($this->output,dirname(dirname(__FILE__))."/".$this->relPath.$this->const."_".$this->max."_".$this->qhash.".jpg",$this->calcQuality($this->max));
-    				return "jpg";
-					break;
-
-				case 'webp':
-				case 'png':
-				case 'gif':
-    				imagepng($this->output,dirname(dirname(__FILE__))."/".$this->relPath.$this->const."_".$this->max."_".$this->qhash.".png",9);
-    				return "png";
-					break;
-
-				default:
-					# code...
-					break;
-			}
-			
+    	switch ($this->mimetype) 
+	{
+		case 'image/jpeg':
+		case 'image/pjpeg':
+		case 'image/x‑xbitmap':
+		case 'image/x‑xbm':
+		case 'image/x‑xpixmap':
+		case 'image/vnd.wap.wbmp':
+    			imagejpeg($this->output,dirname(dirname(__FILE__))."/".$this->relPath.$this->const."_".$this->max."_".$this->qhash.".jpg",$this->calcQuality($this->max));
+    			return "jpg";
+			break;
+		
+		case 'image/webp':
+		case 'image/png':
+		case 'image/gif':
+			imagepng($this->output,dirname(dirname(__FILE__))."/".$this->relPath.$this->const."_".$this->max."_".$this->qhash.".png",9);
+			return "png";
+			break;
+	
+		default:
+			# code...
+			break;
+					
     	}
     }
 
@@ -282,47 +278,43 @@ class ThumbGen
     public function getImage($imagePath,$mimetype)
     {
     	$imageImport;
-    	if(explode("/", $mimetype)[0] == 'image')
-    	{
-	    	switch (explode("/", $mimetype)[1]) 
-			{
+	switch ( $mimetype) 
+	{
+		case 'image/jpeg':
+		case 'image/pjpeg':
+			$imageImport = imagecreatefromjpeg($imagePath);
+			break;
 
-				case 'jpeg':
-				case 'pjpeg':
-    				$imageImport = imagecreatefromjpeg($imagePath);
-					break;
+		case 'image/x‑xbitmap':
+		case 'image/x‑xbm':
+			$imageImport = imagecreatefromxbm($imagePath);
+			break;
 
-				case 'x‑xbitmap':
-				case 'x‑xbm':
-    				$imageImport = imagecreatefromxbm($imagePath);
-					break;
+		case 'image/x‑xpixmap':
+			$imageImport = imagecreatefromxpm($imagePath);
+			break;
 
-				case 'x‑xpixmap':
-    				$imageImport = imagecreatefromxpm($imagePath);
-					break;
+		case 'image/png':
+			$imageImport = imagecreatefrompng($imagePath);
+			break;
 
-				case 'png':
-    				$imageImport = imagecreatefrompng($imagePath);
-					break;
-
-				case 'gif':
-    				$imageImport = imagecreatefromgif($imagePath);
-					break;
+		case 'image/gif':
+			$imageImport = imagecreatefromgif($imagePath);
+			break;
 					
-				case 'vnd.wap.wbmp':
-    				$imageImport = imagecreatefromwbmp($imagePath);
-					break;
+		case 'image/vnd.wap.wbmp':
+			$imageImport = imagecreatefromwbmp($imagePath);
+			break;
 
-				case 'webp':
-    				$imageImport = imagecreatefromwebp($imagePath);
-					break;
+		case 'image/webp':
+			$imageImport = imagecreatefromwebp($imagePath);
+			break;
 				
-				default:
-					# code...
-					break;
-			}
+		default:
+			# code...
+			break;
+		}
 			
-    	}
 
     	return $imageImport;
 		

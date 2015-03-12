@@ -1,5 +1,5 @@
 <?php
-require_once('class.Utilities.php');
+//require_once('class.Utilities.php');
 require_once('class.FileInfo.php');
 require_once('class.ThumbGen.php');
 require_once('class.HTMLGenerator.php');
@@ -16,7 +16,7 @@ class DropGallery{
     private $db;
 
     public static $debugText = "";
-    public static $debugEnable = true;
+    public static $debugEnable = false;
 
     private static $start_time;
 
