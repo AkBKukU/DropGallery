@@ -23,7 +23,12 @@ class DropGalleryDBInterface{
     	$pass = 'password';
     	$database = 'dropGallery';
         //--Begin sql connection
-        $this->mysqli = new mysqli($host, $user, $pass,$database);
+        $this->mysqli = new mysqli(
+        	DGSettings::$DB_HOST,
+        	DGSettings::$DB_ADMIN_USER,
+        	DGSettings::$DB_ADMIN_PASS,
+        	DGSettings::$DB_DATABASE
+        );
         
         //--Error check and Output
         if ($this->mysqli->connect_errno) {
