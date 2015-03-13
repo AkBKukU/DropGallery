@@ -12,7 +12,7 @@ class HTMLGenerator
 	
 	static function flow ($images,$folders)
 	{
-        DropGallery::debug("Start HTML gen");
+        DropGalleryMain::debug("Start HTML gen");
 /*
 
 */
@@ -68,7 +68,7 @@ class HTMLGenerator
 		$HTML .= '
 </div>';
 
-        DropGallery::debug("End HTML gen");
+        DropGalleryMain::debug("End HTML gen");
 		return $HTML;
 	}
 }

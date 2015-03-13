@@ -16,13 +16,11 @@ ini_set('display_errors', '1');
 
 /*                                                                            *\
                               Drop Gallery
-\*                                                                             */
-require_once('content/classes/class.DropGallery.php');
+\*                                                                            */
+require_once('DropGallery.php');
 $DG = new DropGallery();
 
-$DG->addType("flow");
-
-echo $DG->viewFolderNoDB();
+$DG->gallery();
 
 /*                                                                            *\
                               /Drop Gallery

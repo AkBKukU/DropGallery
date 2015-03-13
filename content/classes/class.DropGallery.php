@@ -1,15 +1,8 @@
 <?php
-//require_once('class.Utilities.php');
-require_once('class.FileInfo.php');
-require_once('class.ThumbGen.php');
-require_once('class.HTMLGenerator.php');
-require_once('getid3/getid3.php');
-require_once('class.DropGalleryDBInterface.php');
-//require_once('class.MySQLGalleryInterface.php');
 
-class DropGallery{
+class DropGalleryMain
+{
 
-    private $htmlPath = '/content/gallery-images';
     private $galleryPath;
     private $dirSubFolders;
     private $dirContents;
@@ -27,14 +20,14 @@ class DropGallery{
      */
     public function __construct()
     {
-    	DropGallery::$start_time = microtime(true);
+    	DropGalleryMain::$start_time = microtime(true);
     	$this->db = new DropGalleryDBInterface();
-        $this->galleryPath = $_SERVER['DOCUMENT_ROOT'].$this->htmlPath;
+        $this->galleryPath = $_SERVER['DOCUMENT_ROOT'].DGSettings::$GALERY_HTML_LOCATION;
 
-        DropGallery::debug("Opening: ".$this->galleryPath);
+        DropGalleryMain::debug("Opening: ".$this->galleryPath);
 
         $this->getFileList();
-        DropGallery::debug("Finished Filelist");
+        DropGalleryMain::debug("Finished Filelist");
     }
 
 
@@ -63,7 +56,7 @@ echo '
      * 
      * Loads a folder for viewing without using database
      */
-    public function viewFolderNoDB()
+    public function viewFolder()
     {
         return HTMLGenerator::flow($this->dirContents, $this->dirSubFolders);
     }
@@ -100,7 +93,7 @@ echo '
         $folders;
         $files;
 
-        DropGallery::debug("Start get files");
+        DropGalleryMain::debug("Start get files");
 
         if ( ! file_exists($this->galleryPath) ) 
         {
@@ -156,7 +149,7 @@ echo '
             }
         }
 
-        DropGallery::debug("End get files");
+        DropGalleryMain::debug("End get files");
     }
 
 
@@ -185,7 +178,7 @@ echo '
             'title' => $fileData["title"],
             'mimetype' => $fileData["mimetype"],
             'path' => $this->galleryPath.'/'.$name,
-            'htmlpath'    => $this->htmlPath.'/'.$name
+            'htmlpath'    => DGSettings::$GALERY_HTML_LOCATION.'/'.$name
         );
     }
 
@@ -195,7 +188,7 @@ echo '
      */
     public static function debug($text)
     {
-    	DropGallery::$debugText .= '<span class="debugTime">['.(microtime(true) - DropGallery::$start_time).']</span> '."\t".$text."\n";
+    	DropGalleryMain::$debugText .= '<span class="debugTime">['.(microtime(true) - DropGalleryMain::$start_time).']</span> '."\t".$text."\n";
     }
 
     /*
@@ -205,10 +198,10 @@ echo '
      */
     function __destruct() {
         
-        DropGallery::debug("Fin");
-        if ( DropGallery::$debugEnable )
+        DropGalleryMain::debug("Fin");
+        if ( DropGalleryMain::$debugEnable )
         {
-	        echo '<pre id="dropGalleryDebug">'.DropGallery::$debugText.'</pre>';
+	        echo '<pre id="dropGalleryDebug">'.DropGalleryMain::$debugText.'</pre>';
         }
         
     }
