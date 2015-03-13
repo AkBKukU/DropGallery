@@ -53,7 +53,7 @@ class HTMLGenerator
 		<figure class="dgalleryFile hoverZoom" id="f'.$fileCounter.'" >
 			<a href="#i'.$image["qhash"].'">
 				<div class="imageBlock" hieght="">
-					<img id="i'.$fileCounter.'" src="'.$thumb->getThumb().'" onclick="setBigPicture(this.id)">
+					<img id="i'.$image["qhash"].'" src="'.$thumb->getThumb().'" onclick="setBigPicture(this.id)">
 					<figcaption>'.$image['title'].'</figcaption>
 				</div>
 			</a>

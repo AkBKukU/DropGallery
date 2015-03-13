@@ -84,7 +84,8 @@ var centerdgBigView = function()
 }
 
 var setBigPicture = function(id)
-{
+{	
+	console.log("Setting picture: " + id)
 	var fullViewImage = document.getElementById("fullViewImage");
 	var newImage = document.getElementById(id);
 	
@@ -140,7 +141,7 @@ var openLink = function()
 
 	if( hash != "" )
 	{
-		//alert(hash);
+		console.log("Anchor: " + hash);
 		setBigPicture(hash);
 	}
 }
