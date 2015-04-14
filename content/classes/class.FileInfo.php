@@ -111,7 +111,7 @@ class FileInfo{
 		$this->data['modifyDate'] = date("F d Y H:i:s.", $this->data['modifyDateExact']);
 
 		$this->data['mimetype'] = mime_content_type($this->data['path']);
-	//	$this->data['mimetypeType'] = explode("/", $this->data['mimetype'])[0];
+		$this->data['mimetypeType'] = explode("/", $this->data['mimetype'])[0];
 
 
 	}
@@ -123,7 +123,7 @@ class FileInfo{
 	 */
 	private function loadExfiData()
 	{
-		$exifData = exif_read_data($this->data['path']);
+		$exifData = @exif_read_data($this->data['path']);
 		$result = $this->flattenArray("exfi",$exifData,":");
 
 		//var_dump($result);
@@ -146,14 +146,14 @@ class FileInfo{
 	{
 		$result = array();
 		foreach($array as $key=>$value)
-	{
-		if(is_array($value))
 		{
-			$this->flattenArray($name.$delim.$key,$value,$delim);
-		}else{
-			$result[$name.$delim.$key] = $value;
+			if(is_array($value))
+			{
+				$this->flattenArray($name.$delim.$key,$value,$delim);
+			}else{
+				$result[$name.$delim.$key] = $value;
+			}
 		}
-	}
 	return $result;
 	}
 

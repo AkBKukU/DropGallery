@@ -120,10 +120,10 @@ echo '
 		        	if($newFileTest)
 		        	{
 		        		$this->addNewFile($id,$entry->getFilename());
-		        	}else
-		        	{
-		        		$this->dirContents[] = $this->getFileInfo($id,$entry->getFilename());
 		        	}
+
+		        	$this->dirContents[] = $this->getFileInfo($id,$entry->getFilename());
+		        	
 
                 }
                 elseif( $entry->isDir() )
