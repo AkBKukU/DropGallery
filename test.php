@@ -23,6 +23,9 @@ ini_set('display_errors', '1');
 require_once('DropGallery.php');
 $DG = new DropGallery();
 
+$DBM = new DBManager(DGSettings::$DB_HOST,DGSettings::$DB_ADMIN_USER,DGSettings::$DB_ADMIN_PASS);
+$DBM->displayPublicAlert("Go to Manager","dbmsettingstest.php");
+
 $DG->gallery();
 
 /*                                                                            *\
