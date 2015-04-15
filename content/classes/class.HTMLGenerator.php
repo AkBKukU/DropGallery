@@ -10,7 +10,7 @@
 class HTMLGenerator
 {
 	
-	static function flow ($images,$folders)
+	static function flow ($files,$folders)
 	{
         DropGalleryMain::debug("Start HTML gen");
 /*
@@ -46,15 +46,15 @@ class HTMLGenerator
 		$HTML .= '
 	<div class="dgalleryFiles">';
 		$fileCounter=0;
-		foreach ($images as $image) 
+		foreach ($files as $file) 
 		{
-		$thumb = new ThumbGen($image["path"], $image["mimetype"], $image["qhash"], 500, $image["htmlpath"],"w");
+		$thumb = new ThumbGen($file["path"], $file["mimetype"], $file["qhash"], 500, $file["htmlpath"],"w");
 		$HTML .= '
 		<figure class="dgalleryFile hoverZoom" id="f'.$fileCounter.'" >
-			<a href="#i'.$image["qhash"].'">
+			<a href="#i'.$file["qhash"].'">
 				<div class="imageBlock" hieght="">
-					<img id="i'.$image["qhash"].'" src="'.$thumb->getThumb().'" onclick="setBigPicture(this.id)">
-					<figcaption>'.$image['title'].'</figcaption>
+					<img id="i'.$file["qhash"].'" src="'.$thumb->getThumb().'" onclick="setBigPicture(this.id)">
+					<figcaption>'.$file['title'].'</figcaption>
 				</div>
 			</a>
 		</figure>
