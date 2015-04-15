@@ -129,7 +129,7 @@ class DBManager
 			foreach ($this->dbNewPatches as $patch) 
 			{
 
-				if ( isset($this->postData['install'.$patch[0]]) )
+				if ( isset($this->postData['install'.$patch[0]]) && ( $patch[5] == 1 || intval($this->postData['install'.$patch[0]]) == 1) )
 				{
 					try
 					{
@@ -140,7 +140,7 @@ class DBManager
 						$pdo->beginTransaction();
 						$qr = $pdo->exec($patchSQL);
 						$pdo->commit();
-						if ( $qr != 0 )
+						if ( !($qr === false) )
 						{	
 							$pdo->exec("CALL dbm_patch_set_installed('".$patch[0]."')");
 							echo "<p>Successfully installed patch ".$patch[0].'</p>';
@@ -157,6 +157,12 @@ class DBManager
 						echo 'Connection failed: ' . $e->getMessage();
 					}
 
+				}elseif ( isset($this->postData['install'.$patch[0]]) && ( intval($this->postData['install'.$patch[0]]) == 2) )
+				{
+					$pdo = new PDO('mysql:dbname='.$patch[1].';host='.$this->dblogin[0],$this->dblogin[1],$this->dblogin[2]);
+					$pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_WARNING);
+					$pdo->exec("CALL dbm_patch_set_ignored('".$patch[0]."')");	
+					echo "<p>Successfully ignored patch ".$patch[0].'</p>';			
 				}
 			}
 		}
@@ -216,7 +222,7 @@ class DBManager
 			<th colspan="7" class="tbHeader"> New Patches </th>
 		</tr>
 		<tr>
-			<th> Install? </th>
+			<th> Install/Ignore? </th>
 			<th> Id </th>
 			<th> Database </th>
 			<th> Description </th>
@@ -238,11 +244,14 @@ class DBManager
 				$checked = '';
 				if($patch[5] == 1)
 				{
-					$checked = 'checked  onclick="return false"';
+					$install = '<input type="checkbox" id="install'.$patch[0].'" name="install'.$patch[0].'" checked  onclick="return false" />';
+				}else
+				{
+					$install = '<input type="radio" id="install'.$patch[0].'" name="install'.$patch[0].'" value=1 />/<input type="radio" id="install'.$patch[0].'" name="install'.$patch[0].'" value=2 />';
 				}
 				echo '
 		<tr>
-			<td> <input type="checkbox" id="install'.$patch[0].'" name="install'.$patch[0].'" '.$checked.' /></td>
+			<td> '.$install.' </td>
 			<td> '.$patch[0].' </td>
 			<td> '.$patch[1].' </td>
 			<td> '.$patch[2].' </td>
@@ -332,6 +341,17 @@ END
 CREATE PROCEDURE dbm_patch_set_installed ( inPatch VARCHAR(9) )
 BEGIN
 UPDATE dbm_history SET status = 1 WHERE dbm_history.patch=inPatch;
+END
+
+
+');
+
+		$this->mysqli->query('DROP PROCEDURE IF EXISTS dbm_patch_set_ignored ');
+
+		$this->mysqli->query('
+CREATE PROCEDURE dbm_patch_set_ignored ( inPatch VARCHAR(9) )
+BEGIN
+UPDATE dbm_history SET status = 2 WHERE dbm_history.patch=inPatch;
 END
 
 
