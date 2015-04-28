@@ -18,10 +18,6 @@ class DropGalleryDBInterface{
      */
     public function __construct()
     {
-    	$host = 'localhost';
-    	$user = 'root';
-    	$pass = 'password';
-    	$database = 'dropGallery';
         //--Begin sql connection
         $this->mysqli = new mysqli(
         	DGSettings::$DB_HOST,
@@ -152,6 +148,25 @@ INSERT INTO files ( quickhash , title , description , id_mimetype , datetime_add
     	if($error == "")
     	{	
 	    	$stmt->bind_param("sssisi", $id,$title,$description , $id_mimetype , $filename , $filesize);
+    		$stmt->execute();
+    		$stmt->close();
+    	}else{
+    		echo $error;
+			return false;
+    	}
+    }
+    
+    /*
+     * Adds new tag to a file
+     */
+    public function addTag($id,$tag)
+    {
+    	$stmt = $this->mysqli->prepare("call add_file_tag(?,?);
+    	");
+    	$error = $this->mysqli->error;
+    	if($error == "")
+    	{	
+	    	$stmt->bind_param("ss", $id,$tag);
     		$stmt->execute();
     		$stmt->close();
     	}else{

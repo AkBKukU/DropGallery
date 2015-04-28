@@ -241,7 +241,11 @@ class FileInfo{
 	
 	public function getTags()
 	{
-		return $this->tags;
+		if (isset($this->tags))
+		{
+			return $this->tags;
+		}
+		return false;
 	}
 
 	

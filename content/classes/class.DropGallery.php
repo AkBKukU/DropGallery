@@ -162,7 +162,14 @@ echo '
     {
         
 		$image = new FileInfo($this->galleryPath.'/'.$newFile);
+		$tags = $image->getTags();
 		$this->db->addNewFile($id,$image->getTitle(),$image->getDescription() , $image->getMimetype() , $image->getFilename() , $image->getFilesize());
+		if( !($tags === false) )
+		{
+			foreach ($tags as $key => $value) {
+				$this->db->addTag($id,$value);
+			}
+		}
     }
 
     /*

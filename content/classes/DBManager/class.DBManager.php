@@ -75,6 +75,7 @@ class DBManager
 	{
 		foreach ($this->patches as $database => $patchNames) 
 		{
+			$result = $this->mysqli->query("CREATE DATABASE IF NOT EXISTS ".$database);
 			$this->mysqli->select_db($database);
 			$result = $this->mysqli->query("SHOW TABLES LIKE 'dbm_history'");
 			if ( $result->num_rows == 0)

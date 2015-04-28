@@ -9,7 +9,7 @@
 <body>
 
 
-
+<p> For trigger have deleted files be moved to a different table and save the date that they were deleted. An event can see if the deleted files are over a month old and permanently remove them if they are.</p>
 
 <?php 
 error_reporting(E_ALL);
