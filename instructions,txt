@@ -1,0 +1,5 @@
+For the files for the assignment I have two potential solutions. The first is the files included in this zipped folder. The other is the git repo at https://github.com/AkBKukU/DropGallery.git . I am including the project files here and the full code is available in the repo. 
+
+If you are going to use the repo the program has a settings file that will need a location of a folder of images and a starting mysql admin level user to set up the code. From there use test.php and open the DB Manager at the top and install the SQL patches. At this point it will be configured.
+
+For the zip files the sql commands are stored in the patch files for the software and meant to be executed in order to set up.
