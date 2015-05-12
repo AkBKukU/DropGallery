@@ -11,13 +11,14 @@ Required: Yes
 SET FOREIGN_KEY_CHECKS = 0;
 
 
+
 DROP TABLE IF EXISTS `files`;
 CREATE TABLE files 
 (
 	id_file INTEGER NOT NULL AUTO_INCREMENT,
 	quickhash VARCHAR(32) NOT NULL,
 	title VARCHAR(80) NULL DEFAULT NULL,
-	description VARCHAR(500) NULL DEFAULT NULL,
+	description VARCHAR(2500) NULL DEFAULT NULL,
 	id_mimetype INTEGER NOT NULL COMMENT 'http://www.iana.org/assignments/media-types/media-types.xhtm',
 	datetime_added DATETIME NOT NULL,
 	filename VARCHAR(200) NOT NULL,
@@ -34,6 +35,7 @@ CREATE TABLE files_hidden
 	description VARCHAR(500) NULL DEFAULT NULL,
 	id_mimetype INTEGER NOT NULL COMMENT 'http://www.iana.org/assignments/media-types/media-types.xhtm',
 	datetime_added DATETIME NOT NULL,
+	datetime_deleted DATETIME NOT NULL,
 	filename VARCHAR(200) NOT NULL,
 	filesize INTEGER NOT NULL,
 	PRIMARY KEY (id_file)
@@ -129,3 +131,4 @@ ADD CONSTRAINT fk_extra_data FOREIGN KEY (id_extra_data) REFERENCES `extra_data`
 ALTER TABLE `id_extra_data` ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 
 SET FOREIGN_KEY_CHECKS = 1;
+

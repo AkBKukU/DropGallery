@@ -14,10 +14,13 @@ class DropGallery
      */
     public function __construct()
     {
+		$this->DBM = new DBManager(DGSettings::$DB_HOST,DGSettings::$DB_ADMIN_USER,DGSettings::$DB_ADMIN_PASS);
     	$this->DG = new DropGalleryMain();
 		$this->DG->addType(DGSettings::$GALERY_DISPLAY_TYPE);
-		$this->DBM = new DBManager(DGSettings::$DB_HOST,DGSettings::$DB_ADMIN_USER,DGSettings::$DB_ADMIN_PASS);
 		//$this->DBM->displayPublicAlert("Open Settings","dbmsettingstest.php");
+
+		$DBM = new DBManager(DGSettings::$DB_HOST,DGSettings::$DB_ADMIN_USER,DGSettings::$DB_ADMIN_PASS);
+		$DBM->displayPublicAlert("Go to Manager","dbmsettingstest.php");
 	}
 
 	/*

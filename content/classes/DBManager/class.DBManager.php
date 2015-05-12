@@ -138,6 +138,7 @@ class DBManager
 						$pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_WARNING);
 
 						$patchSQL = file_get_contents($this->patchDir.$patch[1].",".$patch[0].".sql");
+						$patchSQL = str_replace("[%]init_password[/%]", $this->dblogin[2], $patchSQL);
 						$pdo->beginTransaction();
 						$qr = $pdo->exec($patchSQL);
 						$pdo->commit();

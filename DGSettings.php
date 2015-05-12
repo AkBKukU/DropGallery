@@ -1,6 +1,7 @@
 <?php
 
 //     Includes
+		require_once('content/classes/DBManager/class.DBManager.php');
 		require_once('content/classes/class.Utilities.php');
 		require_once('content/classes/class.FileInfo.php');
 		require_once('content/classes/class.ThumbGen.php');
@@ -8,7 +9,6 @@
 		require_once('content/classes/getid3/getid3.php');
 		require_once('content/classes/class.DropGalleryDBInterface.php');
 		require_once('content/classes/class.DropGallery.php');
-		require_once('content/classes/DBManager/class.DBManager.php');
 
 class DGSettings{
 

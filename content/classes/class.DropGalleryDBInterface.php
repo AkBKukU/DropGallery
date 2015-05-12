@@ -80,11 +80,7 @@ WHERE files.quickhash = ?
     	while( ($firstRun) || ($tryAgain) )
     	{
     		$firstRun=false;
-	$stmt = $this->mysqli->prepare("
-SELECT mimetypes.mimetype, mimetypes.id_mimetype
-FROM mimetypes
-WHERE mimetypes.mimetype = ?
-	    	");
+			$stmt = $this->mysqli->prepare("call get_mimetype(?);");
 	    	$error = $this->mysqli->error;
 	    	if($error == "")
 	    	{	
@@ -92,6 +88,7 @@ WHERE mimetypes.mimetype = ?
 	    		$stmt->execute();
 	    		$stmt->bind_result($mimetypeBack, $idMimetype);
 	    		$stmt->fetch();
+	    		$stmt->close();
 	    		if ($mimetypeBack == $mimetype )
 	    		{
 					return $idMimetype;
